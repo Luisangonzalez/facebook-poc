@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Leela mail templates</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <h1>PoC Facebook, click button and show in console</h1>
+  <ul>
+    <li>
+        <p><a href="https://developers.facebook.com/docs/facebook-login/web#logindialog">Login: (scope="public_profile,email,manage_pages,publish_pages,read_page_mailboxes,pages_show_list,pages_manage_cta,pages_manage_instant_articles") </a></p>
+        <fb:login-button
+        scope="public_profile,email,manage_pages,publish_pages,read_page_mailboxes,pages_show_list,pages_manage_cta,pages_manage_instant_articles"
+        onlogin="checkLoginState();">
+        </fb:login-button>
+     </li>
+     <li>
+       <p><a href="https://developers.facebook.com/docs/facebook-login/web/accesstokens">Status: </a></p>
+       <button type="button" name="button" id="login-status">Login Status</button>
+     </li>
+     <li>
+       <p><a href="https://developers.facebook.com/docs/pages/access-tokens"> Me accounts</a></p>
+       <button type="button" name="button" id="me-acconts">Pages_show_list</button>
+     </li>
+     <li>
+       <p><a href="https://developers.facebook.com/docs/graph-api/reference/page/">Reading a Facebok page:</a></p>
+       <button type="button" name="button" id="reading-page-id">Facebok page name</button>
+     </li>
+     <li>
+       <p><a href="https://developers.facebook.com/docs/graph-api/reference/page/subscribed_apps">Get Page Access Tokens</a></p>
+       <button type="button" name="button" id="get-page-access-token">Page Access Tokens</button>
+     </li>
+     <li>
+       <p><a href="https://developers.facebook.com/docs/graph-api/reference/page/subscribed_apps">Page Subscribed Apps  (Need Page access token)</a></p>
+       <button type="button" name="button" id="subscribed">subscribed</button>
+     </li>
+  </ul>
+</body>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId: '255986568181021',
+      xfbml: true,
+      version: 'v2.8'
+    });
+    FB.AppEvents.logPageView();
+    fbApiInit = true; //init flag
+  };
+
+  function fbEnsureInit(callback) {
+    if (!window.fbApiInit) {
+      setTimeout(function() {
+        fbEnsureInit(callback);
+      }, 50);
+    } else {
+      if (callback) {
+        callback();
+      }
+    }
+  }
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  (function() {
+    console.log('HELO IMF');
+    fbEnsureInit(function() {
+      console.log("this will be run once FB is initialized");
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+    });
+  })();
+
+  // Click events
+
+    $('#login-status').click(function(){
+      FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+          console.log(response);
+        }
+      });
+    });
+
+    $('#reading-page-id').click(function(){
+      FB.api(
+          "229554640867563",
+          function (response) {
+            if (response && !response.error) {
+              console.log(response);
+            }
+          }
+      );
+    });
+
+    $('#me-acconts').click(function(){
+      FB.api(
+        "/me/accounts",
+        function (response) {
+          if (response && !response.error) {
+            console.log(response);
+          }
+        }
+      ) ,{scope:"manage_pages"};
+    });
+
+    $('#get-page-access-token').click(function(){
+      FB.api(
+           "/229554640867563?fields=access_token",
+          function (response) {
+            if (response && !response.error) {
+              console.log(response);
+            }
+          }
+      );
+    });
+
+
+    $('#subscribed').click(function(){
+      FB.api(
+           "/229554640867563/subscribed_apps",
+          function (response) {
+            if (response && !response.error) {
+              console.log(response);
+            }
+          }
+      );
+    });
+
+
+
+
+
+</script>
+</html>
