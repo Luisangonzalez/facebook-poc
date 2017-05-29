@@ -1,6 +1,8 @@
-#PoC Facebook login & subscribed
+# Facebook PoC webhooks
 
-Proof of concept to check login with manage_pages permissons in Facebook.
+Facebook proof of concept App to subscribe to the pages of the users who are authenticated in it.
+
+## Client side, show result in console
 
 * To start:
   * `npm install && npm start`
@@ -55,11 +57,16 @@ And this is the response:
 
   ![page token response](./src/img/pageTokenResponse.png)
 
- But on the final call to **[subscribed](https://developers.facebook.com/docs/graph-api/reference/page/subscribed_apps)** which need the page-token obtained before fails:
+ **[Subscribed](https://developers.facebook.com/docs/graph-api/reference/page/subscribed_apps)**
 
- ![page subscribed fail](./src/img/pageSubscribed.png)
+ ![page subscribed fail](./src/img/pageSubscribedOK.png)
 
-### I Opened [facebook bug](https://developers.facebook.com/bugs/1928544617392510/) and [stackoverflow question](https://stackoverflow.com/questions/44208298/get-a-page-token-to-subscribe-my-application-to-the-users-pages)
+
+## Server side:
+
+* [Webhooks example code](https://github.com/fbsamples/graph-api-webhooks-samples/blob/master/heroku/index.js)
+  * https://graph-api-page.herokuapp.com/
+
 
 
 
