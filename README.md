@@ -52,7 +52,7 @@ And this is the response:
 
  ![page subscribed fail](./src/img/pageSubscribed.png)
 
-### I Opened [facebook bug](https://developers.facebook.com/bugs/1928544617392510/) and [stackoverflow question](https://stackoverflow.com/editing-help#code)
+### I Opened [facebook bug](https://developers.facebook.com/bugs/1928544617392510/) and [stackoverflow question](https://stackoverflow.com/questions/44208298/get-a-page-token-to-subscribe-my-application-to-the-users-pages)
 
 
 
