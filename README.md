@@ -64,6 +64,9 @@ And this is the response:
 
 ## Server side:
 
+When you open the url https://graph-api-page.herokuapp.com/ or curl https://graph-api-page.herokuapp.com/ you should see a list of received webhooks, **But I do not receive them**, however if I make a request from the facebook dashboard if I receive them.
+
+
 * [Webhooks example code](https://github.com/fbsamples/graph-api-webhooks-samples/blob/master/heroku/index.js)
   * https://graph-api-page.herokuapp.com/
 
