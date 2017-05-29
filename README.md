@@ -31,15 +31,22 @@ This example, use [test2 Facebook App](https://developers.facebook.com/apps/2559
 
  ![page name](./src/img/pageName.png)
 
- 5. **Get Page Access** This point probably fail, I do **[this](https://developers.facebook.com/docs/pages/access-tokens)**
-`GET /{page-id}?fields=access_token`
+ 5. **subscribed with page acces token ** `GET /{page-id}?fields=access_token`
  With JavaScript SDK:
  ```JavaScript
  FB.api(
       "/229554640867563?fields=access_token",
      function (response) {
        if (response && !response.error) {
-         console.log(response);
+         page_access_token=response.access_token
+         FB.api(
+              "/229554640867563/subscribed_apps?access_token=" + page_access_token,
+             function (response) {
+               if (response && !response.error) {
+                 console.log(response);
+               }
+             }
+         );
        }
      }
  );

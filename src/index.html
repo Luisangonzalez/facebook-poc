@@ -8,36 +8,45 @@
 </head>
 
 <body>
-  <h1>Facebook PoC, click button and show in console</h1>
+  <h1>Facebook PoC webhooks</h1>
+  <p>
+    Facebook proof of concept App to subscribe to the pages of the users who are authenticated in it.
+  </p>
+  <h2>Client side, show result in console</h2>
   <ul>
     <li>
-        <p><a href="https://developers.facebook.com/docs/facebook-login/web#logindialog">Login: (scope="public_profile,email,manage_pages,publish_pages,read_page_mailboxes,pages_show_list,pages_manage_cta,pages_manage_instant_articles") </a></p>
-        <fb:login-button
-        scope="public_profile,email,manage_pages,publish_pages,read_page_mailboxes,pages_show_list,pages_manage_cta,pages_manage_instant_articles"
-        onlogin="checkLoginState();">
-        </fb:login-button>
-     </li>
-     <li>
-       <p><a href="https://developers.facebook.com/docs/facebook-login/web/accesstokens">Status: </a></p>
-       <button type="button" name="button" id="login-status">Login Status</button>
-     </li>
-     <li>
-       <p><a href="https://developers.facebook.com/docs/pages/access-tokens"> Me accounts</a></p>
-       <button type="button" name="button" id="me-acconts">Pages_show_list</button>
-     </li>
-     <li>
-       <p><a href="https://developers.facebook.com/docs/graph-api/reference/page/">Reading a Facebok page:</a></p>
-       <button type="button" name="button" id="reading-page-id">Facebok page name</button>
-     </li>
-     <li>
-       <p><a href="https://developers.facebook.com/docs/graph-api/reference/page/subscribed_apps">Get Page Access Tokens</a></p>
-       <button type="button" name="button" id="get-page-access-token">Page Access Tokens</button>
-     </li>
-     <li>
-       <p><a href="https://developers.facebook.com/docs/graph-api/reference/page/subscribed_apps">Page Subscribed Apps  (Need Page access token)</a></p>
-       <button type="button" name="button" id="subscribed">subscribed</button>
-     </li>
+      <p><a href="https://developers.facebook.com/docs/facebook-login/web#logindialog">Login: (scope="public_profile,email,manage_pages,publish_pages,read_page_mailboxes,pages_show_list,pages_manage_cta,pages_manage_instant_articles") </a></p>
+      <fb:login-button scope="public_profile,email,manage_pages,publish_pages,read_page_mailboxes,pages_show_list,pages_manage_cta,pages_manage_instant_articles" onlogin="checkLoginState();">
+      </fb:login-button>
+    </li>
+    <li>
+      <p><a href="https://developers.facebook.com/docs/facebook-login/web/accesstokens">Status: </a></p>
+      <button type="button" name="button" id="login-status">Login Status</button>
+    </li>
+    <li>
+      <p><a href="https://developers.facebook.com/docs/pages/access-tokens"> Me accounts</a></p>
+      <button type="button" name="button" id="me-acconts">Pages_show_list</button>
+    </li>
+    <li>
+      <p><a href="https://developers.facebook.com/docs/graph-api/reference/page/">Reading a Facebok page:</a></p>
+      <button type="button" name="button" id="reading-page-id">Facebok page name</button>
+    </li>
+    <li>
+      <p><a href="https://developers.facebook.com/docs/graph-api/reference/page/subscribed_apps">Get Page Access Tokens</a></p>
+      <button type="button" name="button" id="get-page-access-token">Page Access Tokens</button>
+    </li>
+    <li>
+      <p><a href="https://developers.facebook.com/docs/graph-api/reference/page/subscribed_apps">Page Access & Subscribed Apps  (Need Page access token)</a></p>
+      <button type="button" name="button" id="page-access-token-subscribed">Page access_token and subscribed</button>
+    </li>
   </ul>
+<h2>Server side: </h2>
+<p>
+  <a href="https://graph-api-page.herokuapp.com/">https://graph-api-page.herokuapp.com/</a>
+</p>
+<p>
+  <a href="https://github.com/fbsamples/graph-api-webhooks-samples/blob/master/heroku/index.js">Code</a>
+</p>
 </body>
 <script>
   window.fbAsyncInit = function() {
@@ -54,7 +63,7 @@
     if (!window.fbApiInit) {
       setTimeout(function() {
         fbEnsureInit(callback);
-      }, 50);
+      }, 500);
     } else {
       if (callback) {
         callback();
@@ -74,73 +83,77 @@
   }(document, 'script', 'facebook-jssdk'));
 
   (function() {
-    console.log('HELO IMF');
     fbEnsureInit(function() {
       console.log("this will be run once FB is initialized");
       FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
+        console.log('Facebook login is load');
       });
     });
   })();
 
   // Click events
 
-    $('#login-status').click(function(){
-      FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
+  $('#login-status').click(function() {
+    FB.getLoginStatus(function(response) {
+      if (response.status === 'connected') {
+        console.log(response);
+      }
+    });
+  });
+
+  $('#reading-page-id').click(function() {
+    FB.api(
+      "1866825406900964",
+      function(response) {
+        if (response && !response.error) {
           console.log(response);
         }
-      });
-    });
+      }
+    );
+  });
 
-    $('#reading-page-id').click(function(){
-      FB.api(
-          "229554640867563",
-          function (response) {
-            if (response && !response.error) {
-              console.log(response);
-            }
-          }
-      );
-    });
-
-    $('#me-acconts').click(function(){
-      FB.api(
-        "/me/accounts",
-        function (response) {
-          if (response && !response.error) {
-            console.log(response);
-          }
+  $('#me-acconts').click(function() {
+    FB.api(
+      "/me/accounts",
+      function(response) {
+        if (response && !response.error) {
+          console.log(response);
         }
-      ) ,{scope:"manage_pages"};
-    });
+      }
+    ), {
+      scope: "manage_pages"
+    };
+  });
 
-    $('#get-page-access-token').click(function(){
-      FB.api(
-           "/229554640867563?fields=access_token",
-          function (response) {
-            if (response && !response.error) {
-              console.log(response);
+  $('#get-page-access-token').click(function() {
+    FB.api(
+      "/1866825406900964?fields=access_token",
+      function(response) {
+        if (response && !response.error) {
+          console.log(response);
+        }
+      }
+    );
+  });
+
+  $('#page-access-token-subscribed').click(function() {
+    FB.api(
+      "/1866825406900964?fields=access_token",
+      function(response) {
+        if (response && !response.error) {
+          page_access_token = response.access_token
+          FB.api(
+            "/1866825406900964/subscribed_apps?access_token=" + page_access_token,
+            function(response) {
+              if (response && !response.error) {
+                console.log(response);
+              }
             }
-          }
-      );
-    });
-
-
-    $('#subscribed').click(function(){
-      FB.api(
-           "/229554640867563/subscribed_apps",
-          function (response) {
-            if (response && !response.error) {
-              console.log(response);
-            }
-          }
-      );
-    });
-
-
-
-
-
+          );
+        }
+      }
+    );
+  });
 </script>
+
 </html>
