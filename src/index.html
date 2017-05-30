@@ -144,6 +144,7 @@
           page_access_token = response.access_token
           FB.api(
             "/1866825406900964/subscribed_apps?access_token=" + page_access_token,
+            'post',
             function(response) {
               if (response && !response.error) {
                 console.log(response);
